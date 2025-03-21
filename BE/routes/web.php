@@ -1,18 +1,25 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
+use Encore\Admin\Facades\Admin;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+Route::get('/', function () {
+    return view('welcome');
+});
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/user', [AuthController::class, 'index']);
+});
+
+Route::middleware(['admin.auth'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'index']);
+    Route::get('/admin/custom-route', [AdminController::class, 'customRoute']);
+});
+
+// Route cho Laravel-Admin
+Admin::routes();
 Route::get('/', function () {
     return view('welcome');
 });
