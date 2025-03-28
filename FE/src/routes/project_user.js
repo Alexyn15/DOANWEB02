@@ -59,15 +59,13 @@ export default function ProjectUser() {
     });
   };
 
-  const toggleUpdateDiv = (id) => {
+  const handleSelectUpdate = (id) => {
     const schedule = schedules.find((schedule) => schedule.id === id);
     if (!schedule) {
       setMessage("Lịch không tồn tại!");
       return;
     }
 
-    setIsUpdateVisible(!isUpdateVisible);
-    setIsDivVisible(false);
     setUpdateId(id);
     setScheduleData({
       name: schedule.name,
@@ -76,6 +74,8 @@ export default function ProjectUser() {
       start_time: schedule.start_time,
       end_time: schedule.end_time,
     });
+    setIsUpdateVisible(true);
+    setIsDivVisible(false);
   };
 
   const handleInputChange = (e) => {
@@ -153,179 +153,186 @@ export default function ProjectUser() {
   };
 
   return (
-    <div className="wrappper-project-user">
+    <div className="wrapper-project-user">
+      <div className="function-section">
+        <div className="Create-project">
+          <a href="#" onClick={toggleCreateDiv}>
+            Tạo Lịch
+          </a>
+        </div>
+        {isDivVisible && (
+          <div className="content">
+            <form onSubmit={handleCreateSchedule}>
+              <div className="form-group">
+                <label htmlFor="name">Tên dự án</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={scheduleData.name}
+                  onChange={handleInputChange}
+                  placeholder="Nhập tên dự án của bạn"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="description">Mô tả</label>
+                <input
+                  type="text"
+                  id="description"
+                  name="description"
+                  value={scheduleData.description}
+                  onChange={handleInputChange}
+                  placeholder="Nhập mô tả của bạn"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="time">Thời gian</label>
+                <input
+                  type="text"
+                  id="time"
+                  name="time"
+                  value={scheduleData.time}
+                  onChange={handleInputChange}
+                  placeholder="Nhập thời gian của bạn"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="start_time">Thời gian bắt đầu</label>
+                <input
+                  type="datetime-local"
+                  id="start_time"
+                  name="start_time"
+                  value={scheduleData.start_time}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="end_time">Thời gian kết thúc</label>
+                <input
+                  type="datetime-local"
+                  id="end_time"
+                  name="end_time"
+                  value={scheduleData.end_time}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <button type="submit" className="Create-button">Tạo</button>
+              </div>
+            </form>
+          </div>
+        )}
+
+        <div className="Update-project">
+          <h3>Chọn lịch để sửa</h3>
+          <ul className="schedule-list">
+            {schedules.map((schedule) => (
+              <li key={schedule.id} className="schedule-item">
+                <span>{schedule.name}</span>
+                <button onClick={() => handleSelectUpdate(schedule.id)}>Sửa</button>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {isUpdateVisible && (
+          <div className="content">
+            <form onSubmit={handleUpdateSchedule}>
+              <div className="form-group">
+                <label htmlFor="name">Tên dự án</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={scheduleData.name}
+                  onChange={handleInputChange}
+                  placeholder="Nhập tên dự án của bạn"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="description">Mô tả</label>
+                <input
+                  type="text"
+                  id="description"
+                  name="description"
+                  value={scheduleData.description}
+                  onChange={handleInputChange}
+                  placeholder="Nhập mô tả của bạn"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="time">Thời gian</label>
+                <input
+                  type="text"
+                  id="time"
+                  name="time"
+                  value={scheduleData.time}
+                  onChange={handleInputChange}
+                  placeholder="Nhập thời gian của bạn"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="start_time">Thời gian bắt đầu</label>
+                <input
+                  type="datetime-local"
+                  id="start_time"
+                  name="start_time"
+                  value={scheduleData.start_time}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="end_time">Thời gian kết thúc</label>
+                <input
+                  type="datetime-local"
+                  id="end_time"
+                  name="end_time"
+                  value={scheduleData.end_time}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <button type="submit" className="Create-button">Cập nhật</button>
+              </div>
+            </form>
+          </div>
+        )}
+
+        <div className="Delete-project">
+          <h3>Danh sách lịch</h3>
+          <ul className="schedule-list">
+            {schedules.map((schedule) => (
+              <li key={schedule.id} className="schedule-item">
+                <span>{schedule.name}</span>
+                <button onClick={() => handleDeleteSchedule(schedule.id)}>Xóa</button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
       <div className="App">
-        <h1></h1>
         <FullCalendar plugins={[dayGridPlugin]} initialView="dayGridMonth" events={events} />
-      </div>
-
-      <div className="Create-project">
-        <a href="#" onClick={toggleCreateDiv}>
-          Tạo Lịch
-        </a>
-      </div>
-      {isDivVisible && (
-        <div className="content">
-          <form onSubmit={handleCreateSchedule}>
-            <div className="form-group">
-              <label htmlFor="name">Tên dự án</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={scheduleData.name}
-                onChange={handleInputChange}
-                placeholder="Nhập tên dự án của bạn"
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="description">Mô tả</label>
-              <input
-                type="text"
-                id="description"
-                name="description"
-                value={scheduleData.description}
-                onChange={handleInputChange}
-                placeholder="Nhập mô tả của bạn"
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="time">Thời gian</label>
-              <input
-                type="text"
-                id="time"
-                name="time"
-                value={scheduleData.time}
-                onChange={handleInputChange}
-                placeholder="Nhập thời gian của bạn"
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="start_time">Thời gian bắt đầu</label>
-              <input
-                type="datetime-local"
-                id="start_time"
-                name="start_time"
-                value={scheduleData.start_time}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="end_time">Thời gian kết thúc</label>
-              <input
-                type="datetime-local"
-                id="end_time"
-                name="end_time"
-                value={scheduleData.end_time}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <button type="submit" className="Create-button">Tạo</button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      <div className="Create-project">
-        <a href="#" onClick={() => toggleUpdateDiv(1)}>
-          Cập nhật Lịch
-        </a>
-      </div>
-      {isUpdateVisible && (
-        <div className="content">
-          <form onSubmit={handleUpdateSchedule}>
-            <div className="form-group">
-              <label htmlFor="name">Tên dự án</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={scheduleData.name}
-                onChange={handleInputChange}
-                placeholder="Nhập tên dự án của bạn"
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="description">Mô tả</label>
-              <input
-                type="text"
-                id="description"
-                name="description"
-                value={scheduleData.description}
-                onChange={handleInputChange}
-                placeholder="Nhập mô tả của bạn"
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="time">Thời gian</label>
-              <input
-                type="text"
-                id="time"
-                name="time"
-                value={scheduleData.time}
-                onChange={handleInputChange}
-                placeholder="Nhập thời gian của bạn"
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="start_time">Thời gian bắt đầu</label>
-              <input
-                type="datetime-local"
-                id="start_time"
-                name="start_time"
-                value={scheduleData.start_time}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="end_time">Thời gian kết thúc</label>
-              <input
-                type="datetime-local"
-                id="end_time"
-                name="end_time"
-                value={scheduleData.end_time}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <button type="submit" className="Create-button">Cập nhật</button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      <div className="Delete-project">
-        <h2>Danh sách lịch</h2>
-        <ul className="schedule-list">
-          {schedules.map((schedule) => (
-            <li key={schedule.id} className="schedule-item">
-              <span>{schedule.name}</span>
-              <button onClick={() => toggleUpdateDiv(schedule.id)}>Sửa</button>
-              <button onClick={() => handleDeleteSchedule(schedule.id)}>Xóa</button>
-            </li>
-          ))}
-        </ul>
       </div>
     </div>
   );
