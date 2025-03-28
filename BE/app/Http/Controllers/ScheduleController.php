@@ -46,6 +46,7 @@ class ScheduleController extends Controller
         }
     }
 
+    // Phương thức cập nhật lịch
     public function update(Request $request, $id)
     {
         try {
@@ -66,13 +67,14 @@ class ScheduleController extends Controller
                 return response()->json(['message' => 'Lịch không tồn tại!'], 404);
             }
 
-            // Update the schedule and ensure id_users remains the same
+            // Cập nhật thông tin lịch
             $schedule->update([
                 'name' => $request->name,
                 'description' => $request->description,
                 'time' => $request->time,
                 'start_time' => $request->start_time,
                 'end_time' => $request->end_time,
+                'id_users' => 5, // Giữ nguyên id_users là 5
             ]);
 
             return response()->json([
@@ -84,7 +86,7 @@ class ScheduleController extends Controller
             return response()->json(['message' => 'Lỗi khi cập nhật lịch'], 500);
         }
     }
-
+    // Phương thức xóa lịch
     public function delete($id)
     {
         $schedule = Schedule::find($id);
@@ -96,7 +98,7 @@ class ScheduleController extends Controller
 
         return response()->json(['message' => 'Xóa lịch thành công!']);
     }
-
+    // Phương thức lấy danh sách lịch
     public function index()
     {
         try {

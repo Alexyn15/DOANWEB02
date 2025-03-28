@@ -117,7 +117,7 @@ export const updateSchedule = async (id, name, description, time, startTime, end
     console.error("Error in updateSchedule:", error.message);
     throw error;
   }
-};
+}
 
 export const login_admin = async (username, password) => {
   try {
@@ -139,5 +139,29 @@ export const getSchedule = async () => {
     throw error.response?.data || "Lỗi không xác định";
   }
 };
+export const deleteSchedule = async (id) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("Token không tồn tại. Vui lòng đăng nhập lại.");
+    }
+
+    const response = await api.delete(`/delete-schedule/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Lỗi khi xóa lịch");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error in deleteSchedule:", error.message);
+    throw error;
+  }
+};
+
+
 
 export default api;

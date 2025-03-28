@@ -1,6 +1,6 @@
 import "../App.css";
 import { useState, useEffect } from "react";
-import { createSchedule, updateSchedule } from "../api";
+import { createSchedule, updateSchedule, deleteSchedule } from "../api";
 import api from "../api"; // Import api
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -32,9 +32,7 @@ export default function ProjectUser() {
   const fetchSchedules = async () => {
     try {
       const response = await api.get("/schedules");
-      console.log("Schedules fetched:", response.data); // Kiểm tra dữ liệu trả về
       const schedules = response.data;
-
       setSchedules(schedules);
       setEvents(
         schedules.map((schedule) => ({
@@ -45,7 +43,6 @@ export default function ProjectUser() {
         }))
       );
     } catch (error) {
-      console.error("Error fetching schedules:", error.message);
       setMessage("Không thể tải lịch. Vui lòng thử lại sau.");
     }
   };
@@ -63,9 +60,22 @@ export default function ProjectUser() {
   };
 
   const toggleUpdateDiv = (id) => {
+    const schedule = schedules.find((schedule) => schedule.id === id);
+    if (!schedule) {
+      setMessage("Lịch không tồn tại!");
+      return;
+    }
+
     setIsUpdateVisible(!isUpdateVisible);
     setIsDivVisible(false);
     setUpdateId(id);
+    setScheduleData({
+      name: schedule.name,
+      description: schedule.description,
+      time: schedule.time,
+      start_time: schedule.start_time,
+      end_time: schedule.end_time,
+    });
   };
 
   const handleInputChange = (e) => {
@@ -76,20 +86,12 @@ export default function ProjectUser() {
   const handleCreateSchedule = async (e) => {
     e.preventDefault();
     try {
-      console.log("Schedule data being sent:", {
-        name: scheduleData.name,
-        description: scheduleData.description,
-        time: scheduleData.time,
-        start_time: formatDateTime(scheduleData.start_time),
-        end_time: formatDateTime(scheduleData.end_time),
-      });
-
       const data = await createSchedule(
         scheduleData.name,
         scheduleData.description,
         scheduleData.time,
-        formatDateTime(scheduleData.start_time), // Định dạng start_time
-        formatDateTime(scheduleData.end_time)   // Định dạng end_time
+        formatDateTime(scheduleData.start_time),
+        formatDateTime(scheduleData.end_time)
       );
 
       setMessage("Tạo lịch thành công!");
@@ -105,7 +107,6 @@ export default function ProjectUser() {
       ]);
       setIsDivVisible(false);
     } catch (error) {
-      console.error("Error in handleCreateSchedule:", error.message);
       setMessage(error.message || "Lỗi tạo lịch! Kiểm tra lại thông tin.");
     }
   };
@@ -126,8 +127,17 @@ export default function ProjectUser() {
       await fetchSchedules();
       setIsUpdateVisible(false);
     } catch (error) {
-      console.error("Error in handleUpdateSchedule:", error.message);
       setMessage(error.message || "Lỗi cập nhật lịch! Kiểm tra lại thông tin.");
+    }
+  };
+
+  const handleDeleteSchedule = async (id) => {
+    try {
+      await deleteSchedule(id);
+      setMessage("Xóa lịch thành công!");
+      await fetchSchedules();
+    } catch (error) {
+      setMessage(error.message || "Lỗi xóa lịch! Thử lại sau.");
     }
   };
 
@@ -145,7 +155,7 @@ export default function ProjectUser() {
   return (
     <div className="wrappper-project-user">
       <div className="App">
-        <h1>FullCalendar trong ReactJS</h1>
+        <h1></h1>
         <FullCalendar plugins={[dayGridPlugin]} initialView="dayGridMonth" events={events} />
       </div>
 
@@ -221,7 +231,7 @@ export default function ProjectUser() {
             </div>
 
             <div className="form-group">
-              <button type="submit">Tạo</button>
+              <button type="submit" className="Create-button">Tạo</button>
             </div>
           </form>
         </div>
@@ -299,11 +309,24 @@ export default function ProjectUser() {
             </div>
 
             <div className="form-group">
-              <button type="submit">Cập nhật</button>
+              <button type="submit" className="Create-button">Cập nhật</button>
             </div>
           </form>
         </div>
       )}
+
+      <div className="Delete-project">
+        <h2>Danh sách lịch</h2>
+        <ul className="schedule-list">
+          {schedules.map((schedule) => (
+            <li key={schedule.id} className="schedule-item">
+              <span>{schedule.name}</span>
+              <button onClick={() => toggleUpdateDiv(schedule.id)}>Sửa</button>
+              <button onClick={() => handleDeleteSchedule(schedule.id)}>Xóa</button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
