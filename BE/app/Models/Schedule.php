@@ -15,6 +15,7 @@ class Schedule extends Model
         'time',
         'start_time',
         'end_time',
+        'id_users', // Thêm trường id_users
     ];
 
     protected $dates = [

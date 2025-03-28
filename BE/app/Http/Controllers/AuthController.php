@@ -18,13 +18,14 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['lỗi không thể đăng ký!' => $validator->errors()], 400);
+            return response()->json(['errors' => $validator->errors()], 400);
         }
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'user', // Thêm role mặc định là user
         ]);
 
         return response()->json([
@@ -63,7 +64,7 @@ class AuthController extends Controller
         return response()->json(['message' => 'Đăng xuất thành công!']);
     }
 
-    public function loginAdmin(Request $request) //
+    public function loginAdmin(Request $request)
     {
         $credentials = $request->only('username', 'password');
 

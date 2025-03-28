@@ -27,14 +27,13 @@ class ScheduleController extends Controller
                 return response()->json(['errors' => $validator->errors()], 400);
             }
 
-
             $schedule = Schedule::create([
                 'name' => $request->name,
                 'description' => $request->description,
                 'time' => $request->time,
                 'start_time' => $request->start_time,
                 'end_time' => $request->end_time,
-                'id_users' => 5, // cho mac dinh la id = 5
+                'id_users' => auth()->id(), // Lấy id người dùng hiện tại
             ]);
 
             return response()->json([
@@ -67,14 +66,13 @@ class ScheduleController extends Controller
                 return response()->json(['message' => 'Lịch không tồn tại!'], 404);
             }
 
-            // Update the schedule and ensure id_users remains 5
+            // Update the schedule and ensure id_users remains the same
             $schedule->update([
                 'name' => $request->name,
                 'description' => $request->description,
                 'time' => $request->time,
                 'start_time' => $request->start_time,
                 'end_time' => $request->end_time,
-                'id_users' => 5, // Ensure it remains assigned to user with id_users = 5
             ]);
 
             return response()->json([
@@ -87,7 +85,6 @@ class ScheduleController extends Controller
         }
     }
 
-    // Xóa lịch
     public function delete($id)
     {
         $schedule = Schedule::find($id);
@@ -98,25 +95,6 @@ class ScheduleController extends Controller
         $schedule->delete();
 
         return response()->json(['message' => 'Xóa lịch thành công!']);
-    }
-
-    public function getUserSchedules()
-    {
-        $user = auth()->user();
-        $schedules = Schedule::where('id_users', $user->id_users)->get();
-
-        $formattedSchedules = $schedules->map(function ($schedule) {
-            $hour = date('H', strtotime($schedule->start_time));
-            $session = ($hour >= 6 && $hour < 12) ? "Sáng" : (($hour >= 12 && $hour < 18) ? "Trưa" : "Tối");
-
-            return [
-                'date' => date('d', strtotime($schedule->start_time)),
-                'session' => $session,
-                'title' => $schedule->title,
-            ];
-        });
-
-        return response()->json($formattedSchedules);
     }
 
     public function index()
@@ -141,5 +119,10 @@ class ScheduleController extends Controller
             Log::error('Error fetching schedules:', ['error' => $e->getMessage()]);
             return response()->json(['message' => 'Lỗi khi lấy danh sách lịch'], 500);
         }
+    }
+
+    public function showCalendar()
+    {
+        return view('calendar');
     }
 }
