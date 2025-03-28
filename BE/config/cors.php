@@ -3,7 +3,7 @@
 return [
     'paths' => ['api/*'],
     'allowed_methods' => ['*'],
-    'allowed_origins' => ['http://localhost:3000'], // Chỉ cho phép React kết nối
+    'allowed_origins' => ['http://localhost:3000'], // Only allow React app to connect
     'allowed_origins_patterns' => [],
     'allowed_headers' => ['*'],
     'exposed_headers' => [],

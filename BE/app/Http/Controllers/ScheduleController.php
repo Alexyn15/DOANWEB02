@@ -5,58 +5,86 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Schedule;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class ScheduleController extends Controller
 {
-    // Tạo lịch mới
     public function create(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'time' => 'required|string',
-            'start_time' => 'required|date',
-            'end_time' => 'required|date|after_or_equal:start_time',
-        ]);
+        try {
+            Log::info('Create Schedule Request:', $request->all());
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'time' => 'nullable|string|max:50',
+                'start_time' => 'required|date',
+                'end_time' => 'required|date|after_or_equal:start_time',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 400);
+            }
+
+
+            $schedule = Schedule::create([
+                'name' => $request->name,
+                'description' => $request->description,
+                'time' => $request->time,
+                'start_time' => $request->start_time,
+                'end_time' => $request->end_time,
+                'id_users' => 5, // cho mac dinh la id = 5
+            ]);
+
+            return response()->json([
+                'message' => 'Tạo lịch thành công!',
+                'schedule' => $schedule,
+            ], 201);
+        } catch (\Exception $e) {
+            Log::error('Error Creating Schedule:', ['error' => $e->getMessage()]);
+            return response()->json(['message' => 'Lỗi khi tạo lịch'], 500);
         }
-
-        $schedule = Schedule::create($request->all());
-
-        return response()->json([
-            'message' => 'Tạo lịch thành công!',
-            'schedule' => $schedule
-        ], 201);
     }
 
-    // Cập nhật lịch hiện có
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'time' => 'required|string',
-            'start_time' => 'required|date',
-            'end_time' => 'required|date|after_or_equal:start_time',
-        ]);
+        try {
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'time' => 'nullable|string|max:50',
+                'start_time' => 'required|date',
+                'end_time' => 'required|date|after_or_equal:start_time',
+            ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 400);
+            }
+
+            $schedule = Schedule::find($id);
+            if (!$schedule) {
+                return response()->json(['message' => 'Lịch không tồn tại!'], 404);
+            }
+
+            // Update the schedule and ensure id_users remains 5
+            $schedule->update([
+                'name' => $request->name,
+                'description' => $request->description,
+                'time' => $request->time,
+                'start_time' => $request->start_time,
+                'end_time' => $request->end_time,
+                'id_users' => 5, // Ensure it remains assigned to user with id_users = 5
+            ]);
+
+            return response()->json([
+                'message' => 'Cập nhật lịch thành công!',
+                'schedule' => $schedule,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error Updating Schedule:', ['error' => $e->getMessage()]);
+            return response()->json(['message' => 'Lỗi khi cập nhật lịch'], 500);
         }
-
-        $schedule = Schedule::find($id);
-        if (!$schedule) {
-            return response()->json(['message' => 'Lịch không tồn tại!'], 404);
-        }
-
-        $schedule->update($request->all());
-
-        return response()->json([
-            'message' => 'Cập nhật lịch thành công!',
-            'schedule' => $schedule
-        ]);
     }
 
     // Xóa lịch
@@ -70,5 +98,48 @@ class ScheduleController extends Controller
         $schedule->delete();
 
         return response()->json(['message' => 'Xóa lịch thành công!']);
+    }
+
+    public function getUserSchedules()
+    {
+        $user = auth()->user();
+        $schedules = Schedule::where('id_users', $user->id_users)->get();
+
+        $formattedSchedules = $schedules->map(function ($schedule) {
+            $hour = date('H', strtotime($schedule->start_time));
+            $session = ($hour >= 6 && $hour < 12) ? "Sáng" : (($hour >= 12 && $hour < 18) ? "Trưa" : "Tối");
+
+            return [
+                'date' => date('d', strtotime($schedule->start_time)),
+                'session' => $session,
+                'title' => $schedule->title,
+            ];
+        });
+
+        return response()->json($formattedSchedules);
+    }
+
+    public function index()
+    {
+        try {
+            $schedules = Schedule::where('id_users', auth()->id())->get();
+
+            // Định dạng giờ theo múi giờ Việt Nam
+            $formattedSchedules = $schedules->map(function ($schedule) {
+                return [
+                    'id' => $schedule->id,
+                    'name' => $schedule->name,
+                    'description' => $schedule->description,
+                    'time' => $schedule->time,
+                    'start_time' => Carbon::parse($schedule->start_time)->timezone('Asia/Ho_Chi_Minh')->toDateTimeString(),
+                    'end_time' => Carbon::parse($schedule->end_time)->timezone('Asia/Ho_Chi_Minh')->toDateTimeString(),
+                ];
+            });
+
+            return response()->json($formattedSchedules, 200);
+        } catch (\Exception $e) {
+            Log::error('Error fetching schedules:', ['error' => $e->getMessage()]);
+            return response()->json(['message' => 'Lỗi khi lấy danh sách lịch'], 500);
+        }
     }
 }

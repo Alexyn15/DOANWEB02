@@ -1,5 +1,6 @@
 
 import '../App.css';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouseChimneyWindow } from '@fortawesome/free-solid-svg-icons';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';

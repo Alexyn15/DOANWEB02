@@ -18,7 +18,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // Định nghĩa các route cho lịch
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/create-schedule', [ScheduleController::class, 'create']);
-    Route::put('/update-schedule/{id}', [ScheduleController::class, 'update']);
-    Route::delete('/delete-schedule/{id}', [ScheduleController::class, 'delete']);
+    Route::get('/schedules', [ScheduleController::class, 'index']); // Lấy danh sách lịch
+    Route::post('/schedules', [ScheduleController::class, 'create']); // Tạo lịch
+    Route::put('/update-schedule/{id}', [ScheduleController::class, 'update']); // Cập nhật lịch
+    Route::delete('/delete-schedule/{id}', [ScheduleController::class, 'delete']); // Xóa lịch
 });

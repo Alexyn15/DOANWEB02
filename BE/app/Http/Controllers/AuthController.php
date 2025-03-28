@@ -18,7 +18,7 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
+            return response()->json(['lỗi không thể đăng ký!' => $validator->errors()], 400);
         }
 
         $user = User::create([

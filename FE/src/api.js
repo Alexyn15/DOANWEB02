@@ -1,12 +1,11 @@
 // api.js - Xử lý gọi API từ frontend
 import axios from "axios";
 
-const API_URL = "http://127.0.0.1:8000/api";
-
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: "http://127.0.0.1:8000/api",
   headers: {
     "Content-Type": "application/json",
+    Authorization: `Bearer ${localStorage.getItem("token")}`, // Gửi token trong header
   },
 });
 
@@ -22,6 +21,8 @@ export const register = async (name, email, password) => {
 export const login = async (username, password) => {
   try {
     const response = await api.post("/login", { username, password });
+    const { token } = response.data;
+    localStorage.setItem('token', token); // Lưu token vào localStorage
     return response.data;
   } catch (error) {
     throw error.response?.data || "Lỗi không xác định";
@@ -49,21 +50,72 @@ export const logout = async (token) => {
     throw error.response?.data || "Lỗi khi đăng xuất";
   }
 };
-export const createSchedule = async (name, description, time, startTime, endTime) => {
+
+export async function createSchedule(name, description, time, start_time, end_time) {
   try {
-    const response = await api.post("/create-schedule", { name, description, time, start_time: startTime, end_time: endTime });
-    return response.data;
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("Token không tồn tại. Vui lòng đăng nhập lại.");
+    }
+
+    const response = await fetch("http://localhost:8000/api/schedules", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        name,
+        description,
+        time,
+        start_time,
+        end_time,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Lỗi khi tạo lịch");
+    }
+
+    return await response.json();
   } catch (error) {
-    throw error.response?.data || "Lỗi không xác định";
+    console.error("Error in createSchedule:", error.message);
+    throw error;
   }
-};
+}
 
 export const updateSchedule = async (id, name, description, time, startTime, endTime) => {
   try {
-    const response = await api.put(`/update-schedule/${id}`, { name, description, time, start_time: startTime, end_time: endTime });
-    return response.data;
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("Token không tồn tại. Vui lòng đăng nhập lại.");
+    }
+
+    const response = await fetch(`http://localhost:8000/api/update-schedule/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        name,
+        description,
+        time,
+        start_time: startTime,
+        end_time: endTime,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Lỗi khi cập nhật lịch");
+    }
+
+    return await response.json();
   } catch (error) {
-    throw error.response?.data || "Lỗi không xác định";
+    console.error("Error in updateSchedule:", error.message);
+    throw error;
   }
 };
 
@@ -76,5 +128,16 @@ export const login_admin = async (username, password) => {
   }
 };
 
+export const getSchedule = async () => {
+  try {
+    const token = localStorage.getItem('token'); // Lấy token từ localStorage
+    const response = await api.get("/get-schedule", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || "Lỗi không xác định";
+  }
+};
 
 export default api;
