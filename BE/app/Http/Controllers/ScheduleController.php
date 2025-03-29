@@ -74,7 +74,8 @@ class ScheduleController extends Controller
                 'time' => $request->time,
                 'start_time' => $request->start_time,
                 'end_time' => $request->end_time,
-                'id_users' => 5, // Giữ nguyên id_users là 5
+                'id_users' => auth()->id(), // Lấy id người dùng hiện tại
+
             ]);
 
             return response()->json([

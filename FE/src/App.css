@@ -105,22 +105,23 @@
 
 .banner {
   position: relative;
-  max-width: 1240px;
+  width: 100%;
+  max-width: none; /* Loại bỏ giới hạn chiều rộng */
   display: block;
   margin: 0 auto;
 }
 
 .intro {
-  position: absolute;
-  top: 80px;
-  left: 246px;
-  width: 750px;
-  height: 700px;
-  background: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: absolute; /* Đặt phần intro nằm trên banner */
+  top: 50%; /* Đặt phần intro ở giữa chiều cao của banner */
+  left: 50%; /* Đặt phần intro ở giữa chiều rộng của banner */
+  transform: translate(-50%, -50%); /* Căn giữa theo cả chiều ngang và chiều dọc */
+  width: 80%; /* Đặt chiều rộng cho phần intro */
+  background: rgb(255, 255, 255); /* Thêm nền mờ để phần intro dễ đọc hơn */
+  padding: 20px; /* Thêm khoảng cách bên trong phần intro */
   text-align: center;
+  border-radius: 10px; /* Bo góc cho phần intro */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Thêm hiệu ứng bóng đổ để phần intro nổi bật */
 }
 
 .color1 {
@@ -140,14 +141,14 @@
 .community {
   float: left;
   width: 200px;
-  background-color: #7D26CD;
+  background-color:    #7D26CD;
   padding: 5px 10px;
   margin: 25px;
   font-size: 20px;
-  border-radius: 10px;
+  border-radius: 10px; 
   color: white;
   border: none;
-  cursor: pointer;
+  cursor: pointer; /* Biến con trỏ thành bàn tay */
   transition: all 0.4s ease;
   box-shadow: 0 7px 0px #551A8B;
 }
@@ -164,14 +165,14 @@
 .professional {
   float: left;
   width: 200px;
-  background-color: #DDDDDD;
+  background-color:    #DDDDDD;
   padding: 5px 10px;
   margin: 25px;
   font-size: 20px;
-  border-radius: 10px;
+  border-radius: 10px; 
   color: white;
   border: none;
-  cursor: pointer;
+  cursor: pointer; /*Biến con trỏ thành bàn tay*/
   transition: all 0.4s ease;
   box-shadow: 0 7px 0px #CCCCCC;
 }
@@ -246,16 +247,29 @@
   text-align: center;
 }
 
-.Register-link,
-.Login-link {
-  color: purple;
-  text-decoration: none;
+/* Thêm các dòng CSS cho nút đăng ký (Register button) */
+.register {
+  padding: 10px 0px;
+  float: left;
 }
 
-.Register-link:hover,
-.Login-link:hover,
-.admin-login:hover {
-  text-decoration: underline;
+.register a {
+  display: block;
+  padding: 10px 13px;
+  margin: 5px;
+  border-radius: 5px;
+  color: #663399;
+  background-color: #CCCCFF;
+  text-decoration: none;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.3s, transform 0.3s;
+  width: 110px;
+}
+
+.register a:hover {
+  background-color: #FFCCFF;
+  transform: scale(1.05);
 }
 
 .admin-login {

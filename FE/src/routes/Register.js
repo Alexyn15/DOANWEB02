@@ -27,20 +27,20 @@ export default function Register() {
     <div className="wrapper-logout">
     <div className="Form-box-logout">
         <h2 className="Logout-title">Register</h2>
-            <form action="">
+            <form action="" onSubmit={handleRegister}>
                 <div className="User" >
                     <label> UserName <FontAwesomeIcon icon={faUser} /> </label>                    
-                    <input type="text" placeholder="UserName..." required/>
+                    <input type="text" placeholder="UserName..." required value={name} onChange={(e) => setName(e.target.value)}/>
                 </div>
 
                 <div className="Email">
                     <label> Email <FontAwesomeIcon icon={faEnvelope} /> </label>    
-                    <input type="text" placeholder="Email..." required />
+                    <input type="text" placeholder="Email..." required value={email} onChange={(e) => setEmail(e.target.value)}/>
                 </div>
 
                 <div className="PassWord">
                     <label> PassWord <FontAwesomeIcon icon={faLock} /> </label>    
-                    <input type="password" placeholder="PassWord..." required />
+                    <input type="password" placeholder="PassWord..." required value={password} onChange={(e) => setPassword(e.target.value)}/>
                 </div>
 
                 <button type="submit" className="Logout-button" >Register</button>

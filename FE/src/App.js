@@ -39,7 +39,7 @@ function Menu() {
                 <a href="Login"> Đăng nhập </a>         
             </div>
 
-            <div className="Register">
+            <div className="register">
                 <a href="Register"> Đăng kí </a>
             </div>
         </div>
@@ -48,23 +48,23 @@ function Menu() {
 
 function Footer(){
     return(
-        <div class="footer">
-            <div class="footer-content">
+        <div className="footer">
+            <div className="footer-content">
                 <p></p>
             </div>
 
-            <div class="footer-content">
+            <div className="footer-content">
                 <p></p>
             </div>
 
-            <div class="footer-content">
+            <div className="footer-content">
                 <p> Địa chỉ: </p>
                 <p> Học viện hàng không - Cơ sở 2: Đường Cộng Hòa, Phường 4, Tân Bình, TP.HCM </p>
             </div>
 
-            <div class="footer-content">
-                <p> Liên hệ: </p>
-                <p> Email: 2331540123@vaa.edu.vn </p>
+            <div className="footer-content">
+                <p> Liên hệ: 0338609223 </p>
+                <p> Email: 2331540072@vaa.edu.vn </p>
                 <p> Bán hàng: 10 số </p>
             </div>
         </div>
