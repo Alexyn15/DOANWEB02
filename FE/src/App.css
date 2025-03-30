@@ -1,7 +1,6 @@
 /* css app.js */
 @import url('https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.3/main.min.css');
 
-/* Existing styles */
 .Logo a {
   display: block;
   padding: 0px 20px;
@@ -79,12 +78,12 @@
   transform: scale(1.05);
 }
 
-.logout {
+.register {
   padding: 10px 0px;
   float: left;
 }
 
-.logout a {
+.register a {
   display: block;
   padding: 10px 13px;
   margin: 5px;
@@ -98,30 +97,31 @@
   width: 110px;
 }
 
-.logout a:hover {
+.register a:hover {
   background-color: #993399;
   transform: scale(1.05);
 }
 
 .banner {
   position: relative;
-  width: 100%;
-  max-width: none; /* Loại bỏ giới hạn chiều rộng */
+  max-width: 100%;
+  height: auto;
+   width: 100%; 
   display: block;
   margin: 0 auto;
 }
 
 .intro {
-  position: absolute; /* Đặt phần intro nằm trên banner */
-  top: 50%; /* Đặt phần intro ở giữa chiều cao của banner */
-  left: 50%; /* Đặt phần intro ở giữa chiều rộng của banner */
-  transform: translate(-50%, -50%); /* Căn giữa theo cả chiều ngang và chiều dọc */
-  width: 80%; /* Đặt chiều rộng cho phần intro */
-  background: rgb(255, 255, 255); /* Thêm nền mờ để phần intro dễ đọc hơn */
-  padding: 20px; /* Thêm khoảng cách bên trong phần intro */
+  position: absolute;
+  top: 80px;
+  left: 246px;
+  width: 750px;
+  height: 700px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  border-radius: 10px; /* Bo góc cho phần intro */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Thêm hiệu ứng bóng đổ để phần intro nổi bật */
 }
 
 .color1 {
@@ -247,29 +247,13 @@
   text-align: center;
 }
 
-/* Thêm các dòng CSS cho nút đăng ký (Register button) */
-.register {
-  padding: 10px 0px;
-  float: left;
-}
-
-.register a {
-  display: block;
-  padding: 10px 13px;
-  margin: 5px;
-  border-radius: 5px;
-  color: #663399;
-  background-color: #CCCCFF;
+.Register-link, .Login-link {
+  color: purple;
   text-decoration: none;
-  font-weight: bold;
-  text-align: center;
-  transition: background-color 0.3s, transform 0.3s;
-  width: 110px;
 }
 
-.register a:hover {
-  background-color: #FFCCFF;
-  transform: scale(1.05);
+.Register-link:hover, .Login-link:hover, .admin-login:hover {
+  text-decoration: underline;
 }
 
 .admin-login {
@@ -791,10 +775,3 @@ input:focus {
     background: #fff;
 }
 
-@media (max-width: 768px) {
-    .calendar-container {
-        width: 100%; /* Khi trên mobile, hiển thị full */
-        float: none;
-        margin-right: 0;
-    }
-}

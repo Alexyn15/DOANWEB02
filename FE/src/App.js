@@ -63,8 +63,8 @@ function Footer(){
             </div>
 
             <div className="footer-content">
-                <p> Liên hệ: 0338609223 </p>
-                <p> Email: 2331540072@vaa.edu.vn </p>
+                <p> Liên hệ: 0123456789 </p>
+                <p> Email: 233154123@vaa.edu.vn </p>
                 <p> Bán hàng: 10 số </p>
             </div>
         </div>

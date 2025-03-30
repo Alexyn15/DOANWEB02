@@ -63,8 +63,8 @@ export default function User() {
                                 <FontAwesomeIcon icon={faPlus} />
                             </a>
                         </div>
-                        <div> hello </div>
-                        <div> hello </div>
+                        <div>  </div>
+                        <div>  </div>
                     </div>
                 </div>
             </div>

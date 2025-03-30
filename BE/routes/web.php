@@ -1,10 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ScheduleController;
-
 
 
 // đăng ký các tuyến đường cho ứng dụng web
@@ -19,12 +17,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/schedules/{id}', [ScheduleController::class, 'update']); // Route để cập nhật lịch
     Route::get('/schedules', [ScheduleController::class, 'index']);
     Route::delete('/schedules/{id}', [ScheduleController::class, 'delete']);
-});
-
-// Routes cho admin
-Route::middleware(['admin.auth'])->group(function () {
-    Route::get('/admin', [AdminController::class, 'index']);
-    Route::get('/admin/custom-route', [AdminController::class, 'customRoute']);
 });
 
 //routes cho đăng ký

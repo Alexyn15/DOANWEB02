@@ -12,6 +12,10 @@ class ScheduleController extends Controller
 {
     public function create(Request $request)
     {
+        if (!auth()->check()) {
+            return response()->json(['message' => 'Vui lòng đăng nhập để tạo lịch'], 401);
+        }
+
         try {
             Log::info('Create Schedule Request:', $request->all());
 
@@ -49,6 +53,10 @@ class ScheduleController extends Controller
     // Phương thức cập nhật lịch
     public function update(Request $request, $id)
     {
+        if (!auth()->check()) {
+            return response()->json(['message' => 'Vui lòng đăng nhập để cập nhật lịch'], 401);
+        }
+
         try {
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
@@ -87,6 +95,7 @@ class ScheduleController extends Controller
             return response()->json(['message' => 'Lỗi khi cập nhật lịch'], 500);
         }
     }
+
     // Phương thức xóa lịch
     public function delete($id)
     {
@@ -99,6 +108,7 @@ class ScheduleController extends Controller
 
         return response()->json(['message' => 'Xóa lịch thành công!']);
     }
+
     // Phương thức lấy danh sách lịch
     public function index()
     {
