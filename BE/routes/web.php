@@ -18,8 +18,3 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/schedules', [ScheduleController::class, 'index']);
     Route::delete('/schedules/{id}', [ScheduleController::class, 'delete']);
 });
-
-//routes cho đăng ký
-Route::post('/register', [AuthController::class, 'register']);
-// routes cho đăng nhập
-Route::post('/login', [AuthController::class, 'login']);
